@@ -44,8 +44,8 @@ export const signup = async (req, res, next) => {
     const gravatar = `https://www.gravatar.com/avatar/${md5(email)}`;
 
     const result = await pool.query(
-      "INSERT INTO users(name, email, password, gravatar) VALUES($1, $2, $3, $4) Returning *",
-      [name, email, hashedPassword, gravatar]
+        "INSERT INTO users(name, email, password, gravatar) VALUES($1, $2, $3, $4) Returning *",
+        [name, email, hashedPassword, gravatar]
     );
 
     const token = await createAccessToken({ id: result.rows[0].id });
@@ -77,4 +77,4 @@ export const signout = (req, res) => {
 export const profile = async (req, res) => {
   const result = await pool.query('SELECT * FROM users WHERE id = $1', [req.userId]);
   return res.json(result.rows[0]);
-} 
+}

@@ -23,16 +23,21 @@ export function AuthProvider({ children }) {
       const res = await axios.post("/signin", data);
       setUser(res.data);
       setIsAuth(true);
-
       return res.data;
     } catch (error) {
-      if (Array.isArray(error.response.data)) {
-        return setErrors(error.response.data);
+      // Verificar si error.response existe
+      if (error.response) {
+        if (Array.isArray(error.response.data)) {
+          return setErrors(error.response.data);
+        }
+        setErrors([error.response.data.message]);
+      } else {
+        // Manejar el caso de error sin respuesta
+        setErrors(["Error de conexión o el servidor no responde"]);
       }
-
-      setErrors([error.response.data.message]);
     }
   };
+
 
   const signup = async (data) => {
     try {
@@ -71,7 +76,7 @@ export function AuthProvider({ children }) {
           setIsAuth(false);
         });
     }
-    
+
     setLoading(false);
   }, []);
 
